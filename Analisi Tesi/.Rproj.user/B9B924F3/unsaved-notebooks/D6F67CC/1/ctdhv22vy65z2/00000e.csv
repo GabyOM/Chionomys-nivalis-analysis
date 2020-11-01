@@ -1,7 +1,0 @@
-"0","#### ripetiamo gli step per quanto riguarda le precipitazioni"
-"0","Datioccas_ <- subset(Datioccas,anno_int)"
-"0","precip <- as.data.frame(t(select(Datioccas, Precipitazioni)))"
-"2","Error: Can't subset columns that don't exist.
-[31mx[39m Column `Precipitazioni` doesn't exist.
-[90mRun `rlang::last_error()` to see where the error occurred.[39m
-"

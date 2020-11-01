@@ -1,0 +1,34 @@
+"0","```r
+# semplifico gamma ed epsilon usando  pformula = ~ alba + MDR + season
+m6b.moddetection.mod1b <- colext(psiformula= ~ MDR + ottavi_veg + Esp.tr,
+                               gammaformula = ~ factor(year) + factor(season) + time.interval -1,
+                               epsilonformula = ~ factor(year) + factor(season) + time.interval -1,
+                               pformula = ~ alba + MDR + season,
+                               data = umf, method=\"BFGS\")
+# summary(m6b.moddetection.mod1)
+m6b.moddetection.mod2b <- colext(psiformula= ~ MDR + ottavi_veg + Esp.tr,
+                               gammaformula = ~ factor(year) + time.interval -1,
+                               epsilonformula = ~ factor(year) + time.interval -1,
+                               pformula = ~ alba + MDR + season,
+                               data = umf, method=\"BFGS\")
+m6b.moddetection.mod3b <- colext(psiformula= ~ MDR + ottavi_veg + Esp.tr,
+                               gammaformula = ~ factor(season) + time.interval -1,
+                               epsilonformula = ~ factor(season) + time.interval -1,
+                               pformula = ~ alba + MDR + season,
+                               data = umf, method=\"BFGS\")
+m6b.moddetection.mod4b <- colext(psiformula= ~ MDR + ottavi_veg + Esp.tr,
+                               gammaformula = ~ time.interval -1,
+                               epsilonformula = ~ time.interval -1,
+                               pformula = ~ alba + MDR + season,
+                               data = umf, method=\"BFGS\")
+m6b.moddetection.mod5b <- colext(psiformula= ~ MDR + ottavi_veg + Esp.tr,
+                               gammaformula = ~ factor(season) + time.interval -1,
+                               epsilonformula = ~ factor(year) + time.interval -1,
+                               pformula = ~ alba + MDR + season,
+                               data = umf, method=\"BFGS\")
+m6b.moddetection.mod6b <- colext(psiformula= ~ MDR + ottavi_veg + Esp.tr,
+                               gammaformula = ~ factor(year) + time.interval -1,
+                               epsilonformula = ~ factor(season) + time.interval -1,
+                               pformula = ~ alba + MDR + season,
+                               data = umf, method=\"BFGS\")
+```"

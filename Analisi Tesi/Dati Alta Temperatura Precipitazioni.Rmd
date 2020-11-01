@@ -1,0 +1,188 @@
+# install.packages("unmarked")
+library(dplyr)
+library(readr)
+library(unmarked)
+require(stats4)
+require(parallel)
+
+#### utilizziamo i dati relativi alle occasioni già elaborato
+Datioccas <- read.csv("../Dati-elaborati/Dati-occasioni.csv", dec=",", sep=";", header = TRUE)
+tail(Datioccas)
+
+
+#### Inserire l'anno su cui si vuole effettuare l'analisi es. =="2014", "2015", ecc
+anno_analisi <- "2018"
+sessione_analisi <- "1"
+anno_int <- Datioccas$Anno == anno_analisi
+sessione_int <- Datioccas$sessione == sessione_analisi
+Datioccas_ <- subset(Datioccas, anno_int & sessione_int)
+orario_occasione_singola <- as.data.frame(t(select(Datioccas_, ALBA..A.T.)))
+
+trappole_posizionate <- max(Datioccas_$trappole.posizionate)
+# forzo il numero di trappole a 75
+trappole_posizionate <- 75
+numero_occasioni <- nrow(Datioccas_)
+
+# forziamo 75 trappole
+#trappole_posizionate <- 75
+orario_occasione <- rbind(orario_occasione_singola[rep(1, trappole_posizionate), ])
+orario_occasione <- as.matrix(orario_occasione)
+rownames(orario_occasione) <- c(1:trappole_posizionate)
+
+orario_occasione
+
+
+
+#### ripetiamo gli step per quanto riguarda le precipitazioni
+precip <- as.data.frame(t(select(Datioccas_, Precipitazioni)))
+precipitazioni_occasione <- rbind(precip[rep(1, trappole_posizionate), ])
+precipitazioni_occasione <- as.matrix(precipitazioni_occasione)
+rownames(precipitazioni_occasione) <- c(1:trappole_posizionate)
+tail(precipitazioni_occasione)
+
+
+#### ripetiamo gli step per i dati relativi alle temperature
+temp <- as.data.frame(t(select(Datioccas_, Temperatura.C)))
+temperatura_occasione <- rbind(temp[rep(1, trappole_posizionate), ])
+temperatura_occasione <- as.matrix(temperatura_occasione)
+rownames(temperatura_occasione) <- c(1:trappole_posizionate)
+
+tail(temperatura_occasione)
+
+#### A questo punto selezionare il file detection histories relativo all'anno di studio interessato creato durante l'esecuzione dello script "Detection History catture"
+occasioni_cattura <- read.csv(paste0("../Dati-detection-history/Detection-Anno_", anno_analisi, "_Sessione_", sessione_analisi, ".csv"), dec=",", sep=";") 
+occasioni_cattura <- subset( occasioni_cattura, select = -ID_TRAP)
+
+tail(occasioni_cattura)
+
+# Verifichiamo che i dataframe abbiano le stesse dimensioni
+dim(orario_occasione)
+dim(precipitazioni_occasione)
+dim(temperatura_occasione)
+dim(occasioni_cattura)
+#Creiamo a questo punto una lista che contenga i dati in oggetto
+obs.covs <- list(
+    orario_occasione = matrix(c(orario_occasione), nrow=trappole_posizionate, ncol=numero_occasioni, byrow=FALSE),
+    temperatura_occasione = matrix(c(temperatura_occasione), nrow=trappole_posizionate, ncol=numero_occasioni, byrow=FALSE),
+    precipitazioni_occasione = matrix(c(precipitazioni_occasione), nrow=trappole_posizionate, ncol=numero_occasioni, byrow=FALSE)
+)
+#obs.covs
+
+
+dati.cov <- read.csv("../Dati-elaborati/Dati-cov.csv", dec=",", sep=";")# da leggere file csv relativo alle covariate
+dati.cov <- dati.cov[1:trappole_posizionate,]
+
+head(dati.cov)
+str(dati.cov)
+
+## UNMARKED DATA FRAME
+# ?unmarkedFrameOccu
+# uniamo le detection histories e le covariate in unico dataframe "unmarked" e lo chiamiamo blgr
+# blgr <- unmarkedFrameOccu(y = y, siteCovs = blgr.site, obsCovs = blgr.obs)
+# y = capture histories (specifiche per la sessione 1 o la sessione 2)
+# siteCovs = dati.cov, uguali per le due sessioni
+# obsCovs alba/tramonto, specifico per la sessione 1 o la sessione 2
+blgr <- unmarkedFrameOccu(y = occasioni_cattura, siteCovs=dati.cov, obsCovs=obs.covs) 
+# which can be summarized by
+#summary of unmarked data frame
+summary(blgr)
+
+
+# Possiamo calcolare la mediana e intervallo interquartile del diametro delle rocce
+MDR <- apply(dati.cov[,1:3], 1, median)
+IQR <- apply(dati.cov[,1:3], 1, IQR)
+# trasformo i dati dell'esposizione
+# trasformazione e successiva analisi dei dati di esposizione
+# expc <- circular(sc$aspect_deg, type="angles", units="degrees", template='none', zero=0, rotation="clock")
+# plot(expc)
+Esp.tr <- vector("numeric", length(dati.cov$aspect_deg))
+for (i in 1:length(dati.cov$aspect_deg)) {
+  if (dati.cov$aspect_deg[i] > 180) Esp.tr[i] <- dati.cov$aspect_deg[i]-360 else Esp.tr[i] <- dati.cov$aspect_deg[i]
+}
+#hist(Esp.tr)
+
+
+# raggruppo i dati delle specie vegetali dominanti, facendo soltanto 3 gruppi: graminacee, muschio, tutte le altre
+specie_dominante <- as.character(dati.cov$dominant)
+specie_dominante[specie_dominante != "Graminacee" & specie_dominante != "Muschio"]  <- "Other_sp"
+
+dati.cov.interesse <- cbind(dati.cov, MDR, IQR, Esp.tr, specie_dominante)
+dati.cov.interesse <- dati.cov.interesse[,c("slope_degr","n_species","Cop_Veg_2018_ottavi","MDR","IQR","Esp.tr","specie_dominante")]
+
+
+head(dati.cov.interesse)
+
+#### si può procedere a fare l'analisi esplorativa sul dataset sc.def e standardizzare ottavi_veg2018 (vedi la funzione 'scale')
+
+dati.cov.interesse$ott <- scale(dati.cov.interesse$Cop_Veg_2018_ottavi)
+# outlier detection
+#boxplot(dati.cov.interesse$slope_degr, xlab="slope_degr")
+#boxplot(dati.cov.interesse$n_species, xlab="n_species")
+#boxplot(dati.cov.interesse$Cop_Veg_2018_ottavi,xlab="ottavi_veg2018")
+#boxplot(dati.cov.interesse$ott, xlab="ott")
+#boxplot(dati.cov.interesse$MDR, xlab="MDR")
+#boxplot(dati.cov.interesse$IQR, xlab="IQR")
+#boxplot(dati.cov.interesse$Esp.tr, xlab="Esp.tr")
+
+
+# collinearità
+library(ggcorrplot)
+cor.matrix <- cor(na.omit(dati.cov.interesse[,c("slope_degr","n_species","MDR","IQR","Esp.tr","ott")]))
+ggcorrplot(cor.matrix)
+p.mat <- (cor.matrix > 0.7)
+p.mat
+ggcorrplot(cor.matrix,
+           hc.order = TRUE, method = "circle",
+           type = "lower", p.mat = p.mat
+)
+
+siteCovs(blgr) <- dati.cov.interesse
+#
+# controllo
+summary(blgr)
+
+
+
+## BASE MODEL
+#siteCovs(blgr)
+fm.base <- occu(~orario_occasione + MDR + temperatura_occasione + precipitazioni_occasione
+                ~slope_degr + I(slope_degr^2) +
+                  MDR + I(MDR^2) +
+                  IQR + I(IQR^2) +
+                  Esp.tr + I(Esp.tr^2) +
+                  specie_dominante,
+                blgr)
+fm.base
+
+
+
+# 
+# INFORMATICA
+#
+
+clusterType <- if(length(find.package("snow", quiet = TRUE))) "SOCK" else "PSOCK"
+clust <- try(makeCluster(getOption("cl.cores", 2), type = clusterType))
+clusterEvalQ(clust, library(unmarked))
+clusterEvalQ(clust,library(MuMIn))
+clusterExport(clust, "blgr")
+invisible(clusterCall(clust, "library", "stats4", character.only = TRUE))
+library(MuMIn)
+getAllTerms(fm.base)
+
+## qui avvia la procedura di selezione automatica, con dredge (come per modelli di regressione "normali")
+## mettendo i vincoli sulla presenza del termine al quadrato e escludendo le variabili troppo correlate 
+pdd2 <- pdredge(fm.base, clust,
+                subset = (`psi(IQR)` | !`psi(I(IQR^2))`) &&
+                  (`psi(slope_degr)` | !`psi(I(slope_degr^2))`) &&
+#                  (`psi(ott)` | !`psi(I(ott^2))`) &&
+#                  (`psi(n_species)` | !`psi(I(n_species^2))`) &&
+                  (`psi(MDR)` | !`psi(I(MDR^2))`) &&
+                  (`psi(Esp.tr)` | !`psi(I(Esp.tr^2))`),
+                trace = 2, m.lim = c(1,NA))
+#pdd2
+#save(pdd2, file="output/pdd2_sessione1.RData", compress=FALSE)
+#load("output/pdd2_sessione1.RData")
+
+
+
+

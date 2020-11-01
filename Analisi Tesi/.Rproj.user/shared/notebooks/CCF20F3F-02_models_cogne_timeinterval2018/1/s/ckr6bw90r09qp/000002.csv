@@ -1,0 +1,55 @@
+"0","```r
+## get the trajectory estimates
+smoothed(m6b.moddetection.mod)
+```"
+"1","                   1         2         3         4         5         6        7         8
+unoccupied 0.2080536 0.3180797 0.2468175 0.2977692 0.2100277 0.2985323 0.398737 0.2992095
+occupied   0.7919464 0.6819203 0.7531825 0.7022308 0.7899723 0.7014677 0.601263 0.7007905
+"
+"0","```r
+#               1         2         3         4         5        6
+# unoccupied 0.5553385 0.2913782 0.2817329 0.2731215 0.2074122 0.370676
+# occupied   0.4446615 0.7086218 0.7182671 0.7268785 0.7925878 0.629324
+# ho fatto anche modelli separati per settembre e le stime coincidono abbastanza, quindi ok, ho usato bene il time interval!
+projected(m6b.moddetection.mod) # OK!!!
+```"
+"1","                   1        2         3         4         5        6         7         8
+unoccupied 0.2353459 0.304384 0.2336563 0.3028474 0.2324772 0.301775 0.3957893 0.3037993
+occupied   0.7646541 0.695616 0.7663437 0.6971526 0.7675228 0.698225 0.6042107 0.6962007
+"
+"0","```r
+#             1         2         3        4         5         6
+# unoccupied 0.5562806 0.2986376 0.2920525 0.292125 0.2306886 0.3707592
+# occupied   0.4437194 0.7013624 0.7079475 0.707875 0.7693114 0.6292408
+## Find bootstrap standard errors for smoothed trajectory
+fm <- nonparboot(m6b.moddetection.mod, B = 100)  # This takes a while!
+fm@smoothed.mean.bsse
+```"
+"1","             1         2          3          4          5          6        7          8
+[1,] 0.1634127 0.1121649 0.06661345 0.09283025 0.06616199 0.09294375 0.112148 0.07782445
+[2,] 0.1634127 0.1121649 0.06661345 0.09283025 0.06616199 0.09294375 0.112148 0.07782445
+"
+"0","```r
+fm@projected.mean.bsse
+```"
+"1","             1         2          3          4          5         6         7          8
+[1,] 0.1617583 0.1205754 0.07013971 0.08667114 0.06214808 0.0916217 0.1108679 0.07608079
+[2,] 0.1617583 0.1205754 0.07013971 0.08667114 0.06214808 0.0916217 0.1108679 0.07608079
+"
+"0","```r
+sessioni <- rep(c(\"luglio\",\"settembre\"),5)
+psi.plot <- data.frame(year=c(2014,2014,2015,2015,2016,2016,2017,2017,2018,2018), 
+                       sessioni=sessioni, 
+                       modes=c(NA,projected(m6b.moddetection.mod)[2,1:5],NA,projected(m6b.moddetection.mod)[2,6:8]),
+                       bsse=c(NA,fm@projected.mean.bsse[2,1:5],NA,fm@projected.mean.bsse[2,6:8]))
+ggplot(psi.plot, aes(x=sessioni, y=modes)) + 
+  geom_errorbar(aes(ymin=modes-bsse, ymax=modes+bsse), colour=\"black\", width=.1) +
+  geom_point(size=3, shape=21, fill=\"white\", colour=\"dark red\", stroke=1) +
+  # scale_x_date(date_labels = sessioni) +
+  facet_wrap(~year, nrow=1, shrink = TRUE) +
+  # scale_x_continuous(limits=c(1, 2), breaks=c(1,2))+#, labels=c(\"luglio\",\"settembre\")) +
+  scale_y_continuous(limits=c(0, 1)) +
+  xlab(\"Sessione\") +
+  ylab(expression(hat(psi))) +
+  theme_light()
+```"

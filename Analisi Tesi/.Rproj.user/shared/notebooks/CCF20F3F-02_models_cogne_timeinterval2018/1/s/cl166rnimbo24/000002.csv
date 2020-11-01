@@ -1,0 +1,27 @@
+"0","```r
+# DETECTION PLOT
+# detection (logit scale) aumenta all'aumentare dell'esposizione (andando verso sud)
+nd <- data.frame(alba=rep(c(rep(\"A\",50),rep(\"Tr\",50)),2),
+                 season=c(rep(\"luglio\",50),rep(\"sett\",100),rep(\"luglio\",50)),
+                 temp=rep(seq(0,20,length=50),4))
+E.psi <- predict(m6b.moddetection.mod, type=\"det\", newdata=nd, appendData=TRUE)
+E.psi$fattore <- paste(nd$alba,\"-\",nd$season)
+# personalizzare i colori
+ggplot(E.psi, aes(x=temp, y=Predicted, group=fattore)) +
+  geom_line(aes(linetype=fattore, color=fattore))+
+  # geom_point()+
+  scale_linetype_manual(name = \"Occasione di cattura\", values=c(\"dashed\", \"solid\",\"dashed\", \"solid\"))+
+  scale_color_manual(name = \"Occasione di cattura\", values=c(\"red\", \"red\", \"#56B4E9\", \"#56B4E9\"))+
+  # scale_size_manual(values=c(1, 1.5))+
+  # theme(legend.position=\"top\")
+  expand_limits(y=0) +                        # Expand y range
+  #scale_y_continuous(breaks=0:20*4) +         # Set tick every 4
+  xlab(\"Temperatura\") +
+  #ylab(expression(hat(p))) +
+  ylab(\"Probabilita' di cattura\") + 
+  # scale_colour_hue(name=\"Occasione di cattura\", l=40) +    # Legend label, use darker colors
+  theme_light() +
+  theme(legend.justification=c(1,0),
+        legend.position=c(0.33,0.60)) +
+  geom_ribbon(aes(x = temp, ymin = lower, ymax = upper), alpha = 0.1)
+```"

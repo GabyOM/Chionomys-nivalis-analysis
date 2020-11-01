@@ -1,0 +1,14 @@
+"1","
+AIC: 1982.815 
+Number of sites: 75
+optim convergence code: 0
+optim iterations: 202 
+Bootstrap iterations: 0 
+"
+"0","```r
+m2 <- colext(psiformula= ~ MDR + I(MDR^2) + IQR + Esp.tr + I(Esp.tr^2) + slope_degr + n_species + I(n_species^2),
+             gammaformula = ~ factor(year)*factor(season) + time.interval -1,
+             epsilonformula = ~ factor(year)*factor(season) + time.interval -1,
+             pformula = ~ alba + temp + rain + season + MDR,
+             data = umf, method=\"BFGS\")
+```"

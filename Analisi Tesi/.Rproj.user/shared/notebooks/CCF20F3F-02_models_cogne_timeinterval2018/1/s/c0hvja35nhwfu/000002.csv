@@ -1,0 +1,27 @@
+"0","```r
+# DETECTION PLOT
+# detection (logit scale)
+nd <- data.frame(alba=c(\"A\",\"A\",\"Tr\",\"Tr\"),
+                 season=c(\"luglio\",\"sett\",\"luglio\",\"sett\"),
+                 temp=rep(11.71, 4))
+E.psi <- predict(m6b.moddetection.mod, type=\"det\", newdata=nd, appendData=TRUE)
+ggplot(E.psi, aes(x=season, y=Predicted, colour=alba, group=alba)) + 
+  geom_errorbar(aes(ymin=lower, ymax=upper), colour=\"black\", width=.1) + #, position=Predicted) +
+  #geom_line(position=pd) +
+  geom_line(aes(group = alba)) +
+  #geom_point(position=pd, size=3, shape=21, fill=\"white\") + # 21 is filled circle
+  geom_point(size=3, shape=21, fill=\"white\") + # 21 is filled circle
+  xlab(\"Mese\") +
+  #ylab(expression(hat(p))) +
+  ylab(\"Probabilita' di cattura\") + 
+  scale_colour_hue(name=\"Occasione di cattura\",    # Legend label, use darker colors
+                   breaks=c(\"A\", \"Tr\"),
+                   labels=c(\"Alba\", \"Tramonto\"),
+                   l=40) +                    # Use darker colors, lightness=40
+  #ggtitle(\"The Effect of Vitamin C on\nTooth Growth in Guinea Pigs\") +
+  expand_limits(y=0) +                        # Expand y range
+  #scale_y_continuous(breaks=0:20*4) +         # Set tick every 4
+  theme_light() +
+  theme(legend.justification=c(1,0),
+        legend.position=c(0.35,0.70))               # Position legend in bottom right
+```"

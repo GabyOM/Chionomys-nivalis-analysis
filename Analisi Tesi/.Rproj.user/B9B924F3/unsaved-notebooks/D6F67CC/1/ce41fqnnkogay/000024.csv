@@ -1,6 +1,0 @@
-"0","#### Inserire l'anno su cui si vuole effettuare l'analisi es. ==""2014"", ""2015"", ecc"
-"0","anno_int <- Datioccas$Anno==""2018"""
-"0","Datioccas_ <- subset(Datioccas,anno_int )"
-"0","albatramonto_singola <- as.data.frame(t(select(Datioccas_, ALBA..A.T.)))"
-"0","AlbaTramonto <- rbind(albatramonto_singola, albatramonto_singola[rep(1,max(Datioccas$trappole.posizionate)), ])"
-"0","head(AlbaTramonto)"

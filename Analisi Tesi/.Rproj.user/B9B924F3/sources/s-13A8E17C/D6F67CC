@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604235132497.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D6F67CC",
+    "lastKnownWriteTime" : 1604262338,
+    "last_content_update" : 1604262338265,
+    "path" : "~/GitHub/Chionomys-nivalis-analysis/Analisi Tesi/Dati Alta Temperatura Precipitazioni.Rmd",
+    "project_path" : "Dati Alta Temperatura Precipitazioni.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "7,61",
+        "scrollLine" : "4",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

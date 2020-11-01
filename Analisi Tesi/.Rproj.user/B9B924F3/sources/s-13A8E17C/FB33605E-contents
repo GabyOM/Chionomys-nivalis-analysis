@@ -1,0 +1,75 @@
+## analisi di correlazione NDVI/BGI rispetto a Occupancy
+
+# Occupancy <- c(0.47, 0.63, 0.69, 0.71, 0.72, # Ciamousseretto
+#                0.44, 0.70, 0.71, 0.71, 0.77, 0.63) # Cogne
+# 
+# NDVI <- c(0.30, 0.21, 0.21, 0.31, 0.26, # Ciamousseretto
+#           0.36, 0.4, 0.5, 0.35, 0.32, 0.40) # Cogne
+# cor(Occupancy, NDVI, method = "spearman")
+# 
+# BGI <- c(5, 27, 20, 22, 26,
+#          35, 45, 165, 100, 155, 40)
+
+library(dplyr)
+dati <- read.csv("output/occupancy-climate.csv", sep=";")
+dati %>% 
+  mutate(anno = dati[,1]) -> dati
+# dati2 <- na.omit(dati)
+
+with(dati,
+     plot(Occupancy ~ PDSI))
+with(dati,
+     cor.test(Occupancy, PDSI, method = "pearson"))
+
+with(dati,
+     plot(PAO ~ PDSI))
+with(dati,
+     cor.test(PAO, PDSI, method = "pearson"))
+
+
+# dati %>%
+#   mutate(PDSI = NULL) -> dati3
+# dati3 <- na.omit(dati3)
+plot(Occupancy ~ NDVI_medio, data=dati)
+
+library(ggplot2)
+ggplot(dati, aes(x=NDVI_medio, y=Occupancy)) + 
+  geom_point(size=3, shape=21, fill="white", colour="dark red", stroke=1) +
+  # scale_x_date(date_labels = sessioni) +
+  # facet_wrap(~year, nrow=1, shrink = TRUE) +
+  # scale_x_continuous(limits=c(1, 2), breaks=c(1,2))+#, labels=c("luglio","settembre")) +
+  scale_y_continuous(limits=c(0.6, 0.8)) +
+  scale_x_continuous(limits=c(0.25, 0.37)) +
+  xlab("NDVI") +
+  ylab("Occupancy") +
+  theme_light()
+
+with(dati,
+     cor.test(Occupancy, NDVI_medio, method = "pearson"))
+
+with(dati,
+     plot(PAO ~ NDVI_medio))
+with(dati,
+     cor.test(PAO, NDVI_medio, method = "pearson"))
+
+with(dati,
+     plot(PDSI ~ NDVI_medio))
+with(dati,
+     cor.test(PDSI, NDVI_medio, method = "pearson"))
+
+
+#---------------------------------------------------------
+## ---- analisi di correlazione delle variabili esplicative ----
+# togliendo la colonna della specie dominante e convertendo temporaneamente gli ottavi in numero
+sc.def.temp <- na.omit(sc.def)
+sc.def.temp$ottavi_veg <- as.numeric(sc.def.temp$ottavi_veg)
+corr <- round(cor(sc.def.temp[,-7], method = "pearson"), 2)
+corr
+# vedere se ci sono valori superiori a 0.5
+# correlazione tra ottavi_veg e n_species
+
+# codice sotto non funziona, ma era solo per grafico
+# non è vero, funziona di nuovo!! :-D
+ggcorrplot(corr)
+ggcorrplot(corr, type = "lower", sig.level = 0.69, p.mat = abs(corr))
+

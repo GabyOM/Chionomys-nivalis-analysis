@@ -1,0 +1,25 @@
+"0","```r
+# obs.covs.temp <- obsCovs(umf)
+# obs.covs.temp$temp <- as.numeric(obs.covs.temp$temp)
+# summary(as.numeric(as.character(obs.covs.temp$temp)))
+# obs.covs.temp$rain <- as.numeric(obs.covs.temp$rain)
+# obsCovs(umf) <- obs.covs.temp
+# site.covs.temp <- siteCovs(umf)
+# site.covs.temp$ottavi_veg <- as.numeric(site.covs.temp$ottavi_veg)-1
+# summary(site.covs.temp$ottavi_veg)
+# siteCovs(umf) <- site.covs.temp
+# modello nullo
+m0 <- colext(psiformula= ~1,
+             gammaformula = ~ 1,
+             epsilonformula = ~ 1,
+             pformula = ~ 1,
+             data = umf, method=\"BFGS\")
+summary(m0)
+```"
+"1","
+Call:
+colext(psiformula = ~1, gammaformula = ~1, epsilonformula = ~1, 
+    pformula = ~1, data = umf, method = \"BFGS\")
+
+Initial (logit-scale):
+"

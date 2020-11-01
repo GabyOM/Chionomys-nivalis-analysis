@@ -1,5 +1,0 @@
-"0","#### utilizziamo i dati relativi alle occasioni già elaborato"
-"0","Datioccas <- read.csv(file=""C://Users//gaby//Documents//GitHub//Chionomys-nivalis-analysis//Dati-elaborati"", dec="","", sep="";"", header = TRUE)"
-"2","cannot open file 'C://Users//gaby//Documents//GitHub//Chionomys-nivalis-analysis//Dati-elaborati': Permission denied"
-"2","Error in file(file, ""rt"") : cannot open the connection
-"
