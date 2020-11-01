@@ -1,0 +1,3 @@
+"0","# Convertiamo i dati con un formato riconoscibile da R"
+"0","temp_prec_grand_crot[""Data.R""]   <- as.Date(temp_prec_grand_crot$Data.R, format=""%d-%m-%Y"")"
+"0","head(temp_prec_grand_crot)"

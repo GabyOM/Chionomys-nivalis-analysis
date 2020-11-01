@@ -1,0 +1,93 @@
+
+```{r}
+# CSV Raccolta dati
+Daticatt <- read.csv("Dati-originali/daticatture.csv", dec=",", sep=";", header = TRUE)
+Datitrap <- read.csv("Dati-originali/datitrappole.csv", dec=",", sep=";", header = TRUE)
+Datioccas <- read.csv("Dati-originali/sforzocampionamento.csv", dec=",", sep=";", header = TRUE)
+# CSV Meteo
+temp_prec_grand_crot <- read.csv("Dati-elaborati\\Dati_precip-temp_grand-crot.csv", dec=",", sep=";", header = TRUE)
+```
+
+```{r}
+# Convertiamo i dati con un formato riconoscibile da R
+temp_prec_grand_crot["Data.R"]   <- as.Date(temp_prec_grand_crot$Data.R, format="%d-%m-%Y")
+head(temp_prec_grand_crot)
+```
+
+```{r}
+# Rimuoviamo le righe che non hanno un ID_TRAP - problema in fase di export da Excel
+Datitrap <- Datitrap[!is.na(Datitrap$ID_TRAP), ]
+
+# Convertiamo la copertura vegetale in ottavi
+Datitrap$Cop_Veg_2015_ottavi <- Datitrap$X..COP..VEG..2015 / 100*8
+Datitrap$Cop_Veg_2018_ottavi <- Datitrap$X..COP..VEG..2018 / 100*8
+
+head(Datitrap)
+```
+
+```{r}
+Datioccas <- Datioccas[!is.na(Datioccas$occasione), ]
+
+Datioccas["Data.R"] <- as.Date(Datioccas$DATA, "%d/%m/%Y")
+Datioccas["Anno"] <- format(Datioccas["Data.R"],"%Y")
+# Eliminiamo la vecchia colonna Data
+Datioccas <- subset( Datioccas, select = -DATA)
+
+# Verifichiamo errori nella colonna relativa all'alba
+errori  <- subset(Datioccas,ALBA..A.T. != "A" & ALBA..A.T. != "T")
+if (nrow(errori) > 0) {
+    print("ATTENZIONE: Valori spuri")
+    errori
+}
+
+# Aggiungiamo una colonna con l'orario stimato
+Datioccas$Orario.R <- lapply(Datioccas$ALBA..A.T., function(x) ifelse(x == "A","07:00","17:00"))
+Datioccas$Orario.R <- as.character(Datioccas$Orario.R)
+
+head(Datioccas)
+```
+```{r}
+Datioccas <- merge(Datioccas,temp_prec_grand_crot)
+head(Datioccas)
+```
+
+```{r}
+Daticatt[Daticatt==""] <- NA
+Daticatt[Daticatt=="IND"] <- NA
+# Verifichiamo errori nella colonna relativa all'alba
+
+errori  <- subset(Daticatt,ALBA != "A" & ALBA != "T")
+if (nrow(errori) > 0) {
+    print("ATTENZIONE: Valori spuri")
+    errori
+}
+head(Daticatt)
+```
+```{r}
+Daticatt["Data_R"] <- as.Date(Daticatt$DATA, "%d/%m/%Y")
+Daticatt["Anno"] <- format(Daticatt["Data_R"],"%Y")
+# Eliminiamo la vecchia colonna Data
+Daticatt <- subset( Daticatt, select = -DATA)
+```
+
+```{r}
+mergedData <- merge(Daticatt, Datitrap, by.x=c("ID_TRAPPOLA"), by.y=c("ID_TRAP"))
+```
+
+```{r}
+write.csv2(Daticatt,"Dati-elaborati\\Dati-catture.csv", row.names = FALSE)
+write.csv2(Datitrap,"Dati-elaborati\\Dati-trappole.csv", row.names = FALSE)
+write.csv2(Datioccas,"Dati-elaborati\\Dati-occasioni.csv", row.names = FALSE)
+write.csv2(mergedData,"Dati-elaborati\\Dati-catture-trappole.csv", row.names = FALSE)
+```
+
+```{r}
+### creiamo anche un dataframe che includono le covariate
+head(Datitrap[ ,c(9:14,17:18,22)])
+dati.cov <- Datitrap[,c(9:14,17:18,22)] 
+head(dati.cov)
+```
+```{r}
+write.csv2(dati.cov,"Dati-elaborati\\Dati-cov.csv", row.names=FALSE)
+```
+

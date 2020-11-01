@@ -1,0 +1,6 @@
+"0","# Rimuoviamo le righe che non hanno un ID_TRAP - problema in fase di export da Excel"
+"0","Datitrap <- Datitrap[!is.na(Datitrap$ID_TRAP), ]"
+"0","# Convertiamo la copertura vegetale in ottavi"
+"0","Datitrap$Cop_Veg_2015_ottavi <- Datitrap$X..COP..VEG..2015 / 100*8"
+"0","Datitrap$Cop_Veg_2018_ottavi <- Datitrap$X..COP..VEG..2018 / 100*8"
+"0","head(Datitrap)"

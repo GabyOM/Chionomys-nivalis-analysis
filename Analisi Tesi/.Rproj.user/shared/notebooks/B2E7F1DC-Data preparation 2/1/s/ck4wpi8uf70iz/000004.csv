@@ -1,0 +1,2 @@
+"0","### creiamo anche un dataframe che includono le covariate"
+"0","head(Datitrap[ ,c(9:14,17:18,22)])"

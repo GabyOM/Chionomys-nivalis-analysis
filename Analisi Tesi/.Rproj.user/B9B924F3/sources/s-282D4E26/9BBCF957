@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604245864569.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9BBCF957",
+    "lastKnownWriteTime" : 8316297355078926335,
+    "last_content_update" : 1604245864569,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "B9AADC6D",
+        "caption" : "Datioccas",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=Datioccas&cache_key=B9AADC6D",
+        "displayedObservations" : 166,
+        "environment" : "",
+        "object" : "Datioccas",
+        "preview" : 0,
+        "totalObservations" : 166,
+        "variables" : 13
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

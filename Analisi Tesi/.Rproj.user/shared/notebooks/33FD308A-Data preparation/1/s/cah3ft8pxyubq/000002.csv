@@ -1,0 +1,2 @@
+"0","colnames(temp_prec_grand_crot) <- c(""Precipitazioni"",""Temperatura.C"",""Orario.R"",""Data.R"")"
+"0","tail(temp_prec_grand_crot)"

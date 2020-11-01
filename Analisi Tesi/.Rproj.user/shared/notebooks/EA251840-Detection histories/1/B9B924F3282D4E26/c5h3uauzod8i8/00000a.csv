@@ -1,0 +1,2 @@
+"0","Daticatt <- read.csv(""Data/nuovifile/Dati-catture.csv"", dec="","", sep="";"", header = TRUE)"
+"0","Datioccas <- read.csv(""Data/nuovifile/Dati-occasioni.csv"", dec="","", sep="";"", header = TRUE)"

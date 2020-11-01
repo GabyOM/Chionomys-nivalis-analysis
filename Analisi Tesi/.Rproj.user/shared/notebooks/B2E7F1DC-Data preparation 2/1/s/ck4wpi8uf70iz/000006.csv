@@ -1,0 +1,2 @@
+"0","dati.cov <- Datitrap[,c(9:14,17:18,22)] "
+"0","head(dati.cov)"

@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+# install.packages("unmarked")
+library(dplyr)
+library(readr)
+library(unmarked)
+require(stats4)
+require(parallel)
+```
+
+```{r}
+#### utilizziamo i dati relativi alle occasioni già elaborato
+Datioccas <- read.csv(file="C://Users//gaby//Documents//GitHub//Chionomys-nivalis-analysis//Dati-elaborati", dec=",", sep=";", header = TRUE)
+tail(Datioccas)
+```
+
+```{r}
+#### Inserire l'anno su cui si vuole effettuare l'analisi es. =="2014", "2015", ecc
+anno_int <- Datioccas$Anno=="2018"
+Datioccas_ <- subset(Datioccas,anno_int )
+albatramonto_singola <- as.data.frame(t(select(Datioccas_, ALBA..A.T.)))
+AlbaTramonto <- rbind(albatramonto_singola, albatramonto_singola[rep(1,max(Datioccas$trappole.posizionate)), ])
+head(AlbaTramonto)
+```
+```{r}
+#### Creiamo una matrice relativa all'Alba o Tramonto, tenendo conto di selezionare le variabili (colonne) riguardanti l'anno di interesse
+alba <- as.matrix(AlbaTramonto[1:max(Datioccas$trappole.posizionate),114:148])
+rownames(alba)<-c(1:max(Datioccas$trappole.posizionate))
+head(alba)
+```
+```{r}
+#### ripetiamo gli step per quanto riguarda le precipitazioni
+Datioccas_ <- subset(Datioccas,anno_int)
+precip <- as.data.frame(t(select(Datioccas, Precipitazioni)))
+precipitazioni <- rbind(precip, precip[rep(1, max(Datioccas$trappole.posizionate)), ])
+tail(precipitazioni)
+```
+
