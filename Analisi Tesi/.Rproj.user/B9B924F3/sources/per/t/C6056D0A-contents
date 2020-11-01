@@ -75,10 +75,10 @@ mergedData <- merge(Daticatt, Datitrap, by.x=c("ID_TRAPPOLA"), by.y=c("ID_TRAP")
 ```
 
 ```{r}
-write.csv2(Daticatt,file="Data/nuovifile/Dati-catture.csv", row.names = FALSE)
-write.csv2(Datitrap,file="Data/nuovifile/Dati-trappole.csv", row.names = FALSE)
-write.csv2(Datioccas,file="Data/nuovifile/Dati-occasioni.csv", row.names = FALSE)
-write.csv2(mergedData,file="Data/nuovifile/Dati-catture-trappole.csv", row.names = FALSE)
+write.csv2(Daticatt,"Dati-elaborati\\Dati-catture.csv", row.names = FALSE)
+write.csv2(Datitrap,"Dati-elaborati\\Dati-trappole.csv", row.names = FALSE)
+write.csv2(Datioccas,"Dati-elaborati\\Dati-occasioni.csv", row.names = FALSE)
+write.csv2(mergedData,"Dati-elaborati\\Dati-catture-trappole.csv", row.names = FALSE)
 ```
 
 ```{r}
@@ -88,6 +88,6 @@ dati.cov <- Datitrap[,c(9:14,17:18,22)]
 head(dati.cov)
 ```
 ```{r}
-write.csv2(dati.cov,file="Data/nuovifile/Dati-cov.csv", row.names=FALSE)
+write.csv2(dati.cov,"Dati-elaborati\\Dati-cov.csv", row.names=FALSE)
 ```
 

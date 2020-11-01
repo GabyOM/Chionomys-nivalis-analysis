@@ -27,6 +27,6 @@ tail(temp_prec_grand_crot)
 ```
 
 ```{r}
-write.csv2(temp_prec_grand_crot,file="Data/nuovifile/Dati_precip-temp_grand-crot.csv", row.names = FALSE)
+write.csv2(temp_prec_grand_crot,"Dati-elaborati\\Dati_precip-temp_grand-crot.csv", row.names = FALSE)
 ```
 

@@ -6,8 +6,8 @@ output: html_notebook
 
 
 ```{r}
-Daticatt <- read.csv("Data/nuovifile/Dati-catture.csv", dec=",", sep=";", header = TRUE)
-Datioccas <- read.csv("Data/nuovifile/Dati-occasioni.csv", dec=",", sep=";", header = TRUE)
+Daticatt <- read.csv("Dati-elaborati\\Dati-catture.csv", dec=",", sep=";", header = TRUE)
+Datioccas <- read.csv("Dati-elaborati\\Dati-occasioni.csv", dec=",", sep=";", header = TRUE)
 ```
 
 ```{r}
@@ -51,7 +51,7 @@ for (anno in unique(Daticatt$Anno)) {
         matrice_detection <- NULL
         matrice_detection <- create_detection_matrix(anno, sessione)
         if (!is.null(matrice_detection)) {
-            write.csv2(matrice_detection, paste0(file="/nuovifile/detection/Detection-Anno_",anno,"_Sessione_",sessione,".csv"), row.names = FALSE)
+            write.csv2(matrice_detection, paste0("Dati-detection-history\\Detection-Anno_",anno,"_Sessione_",sessione,".csv"), row.names = FALSE)
         }
     }
 }

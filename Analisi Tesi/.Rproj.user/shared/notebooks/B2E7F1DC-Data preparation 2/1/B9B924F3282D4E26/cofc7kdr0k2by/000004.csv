@@ -1,4 +1,0 @@
-"0","write.csv2(Daticatt,file=""Data/nuovifile/Dati-catture.csv"", row.names = FALSE)"
-"0","write.csv2(Datitrap,file=""Data/nuovifile/Dati-trappole.csv"", row.names = FALSE)"
-"0","write.csv2(Datioccas,file=""Data/nuovifile/Dati-occasioni.csv"", row.names = FALSE)"
-"0","write.csv2(mergedData,file=""Data/nuovifile/Dati-catture-trappole.csv"", row.names = FALSE)"
