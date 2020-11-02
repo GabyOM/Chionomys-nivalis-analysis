@@ -75,26 +75,21 @@ dati.cov <- dati.cov[1:trappole_posizionate,]
 head(dati.cov)
 str(dati.cov)
 
+
 ## UNMARKED DATA FRAME
 # ?unmarkedFrameOccu
 # uniamo le detection histories e le covariate in unico dataframe "unmarked" e lo chiamiamo blgr
-# blgr <- unmarkedFrameOccu(y = y, siteCovs = blgr.site, obsCovs = blgr.obs)
 # y = capture histories (specifiche per la sessione 1 o la sessione 2)
 # siteCovs = dati.cov, uguali per le due sessioni
 # obsCovs alba/tramonto, specifico per la sessione 1 o la sessione 2
 blgr <- unmarkedFrameOccu(y = occasioni_cattura, siteCovs=dati.cov, obsCovs=obs.covs) 
-# which can be summarized by
-#summary of unmarked data frame
 summary(blgr)
-
 
 # Possiamo calcolare la mediana e intervallo interquartile del diametro delle rocce
 MDR <- apply(dati.cov[,1:3], 1, median)
 IQR <- apply(dati.cov[,1:3], 1, IQR)
 # trasformo i dati dell'esposizione
 # trasformazione e successiva analisi dei dati di esposizione
-# expc <- circular(sc$aspect_deg, type="angles", units="degrees", template='none', zero=0, rotation="clock")
-# plot(expc)
 Esp.tr <- vector("numeric", length(dati.cov$aspect_deg))
 for (i in 1:length(dati.cov$aspect_deg)) {
   if (dati.cov$aspect_deg[i] > 180) Esp.tr[i] <- dati.cov$aspect_deg[i]-360 else Esp.tr[i] <- dati.cov$aspect_deg[i]
@@ -142,7 +137,7 @@ siteCovs(blgr) <- dati.cov.interesse
 summary(blgr)
 
 
-
+####Da questo punto in poi inizio ad avere difficoltà, i miei dati sembrano variare molto rispetto gli originali del 2018. è possibile che sia dovuto ai dati delle temperature e precipitazioni che variano rispetto a quelli ricavati da Bianca nel 2018. Dato che io ho incrociato i dati direttamente in base l'orario stimato delle occasioni.
 ## BASE MODEL
 #siteCovs(blgr)
 fm.base <- occu(~orario_occasione + MDR + temperatura_occasione + precipitazioni_occasione
@@ -155,7 +150,6 @@ fm.base <- occu(~orario_occasione + MDR + temperatura_occasione + precipitazioni
                 specie_dominante,
                 blgr)
 fm.base
-
 
 
 # 
@@ -171,6 +165,7 @@ invisible(clusterCall(clust, "library", "stats4", character.only = TRUE))
 library(MuMIn)
 getAllTerms(fm.base)
 
+#la funzione pdredge non si completa e di conseguenza non crea l'oggetto pdd2, utile a mostrare i risultati della selezione automatica. 
 ## qui avvia la procedura di selezione automatica, con dredge (come per modelli di regressione "normali")
 ## mettendo i vincoli sulla presenza del termine al quadrato e escludendo le variabili troppo correlate 
 pdd2 <- pdredge(fm.base, clust,
@@ -193,12 +188,15 @@ load("../pdd2_sessione1.RData")
 ## risultati
 ## PLOTTATO I RISULTATI DELLA SELEZIONE AUTOMATICA
 ## grafico da riportare nei risultati
+
+#ho notato che neanche lo script originale riesce ad elaborare il plot per la sessione 1
 par(mfrow = c(1,1))
 op <- par(mar = c(3,5,6,4), mfrow=c(1,1))
 plot(pdd2, labAsExpr = TRUE)
 par(op)
 
 
+#non essendoci pdd2 non possiamo vedere i modelli
 ## VEDIAMO I RISULTATI DEL MODELLO MIGLIORE
 summary(get.models(pdd2, 1)[[1]])
 # riportare la tabella dei coefficienti
@@ -206,35 +204,22 @@ summary(get.models(pdd2, 1)[[1]])
 ## DI POCO IN TERMINI DI AIC (deltaAIC < 2)
 summary(model.avg(pdd2, subset = delta < 2))
 
-# # So we get estimates and an AIC value, but the estimates are on the logit scale.  
-# # The built-in function backTransform() will provide the real scale estimates of detection ('det') 
-# # and occupancy ('state')
-# # back transformations
-# best.mod1 <- occu(~alba
-#                   ~ poly(Incl, degree=2, raw=TRUE) +
-#                     poly(NSpecie, degree=2, raw=TRUE) +
-#                     # NSpecie + I(NSpecie^2) +
-#                     mediana.rocce +
-#                     Esp.tr, # + I(Esp.tr^2),
-#                  blgr)
-# backTransform(best.mod,'det') 
-# backTransform(best.mod, 'state')
-
 ## questa parte stima il numero di siti occupati ma non ci serve
-# Finally, unmarked provide an Emprical Bayes estimate and confidence interval of the number/ proportion of study sites occupied.  This method essentially uses the estimate of psi to generate a vector of 0,1 binary variables z under the premise that z~Bernoulli(psi); the sum of the mode, lower, and upper quantiles from this simulation then provides an empirical CI on then number / proportion of occupied sites.  To generate this for the first model estimates we use
-#empirical Bayes estimate of proportion of sites occupied
-s<-nrow(y)
-re <- ranef(get.models(pdd2, 1)[[1]])
-EBUP <- bup(re, stat="mode")
-CI <- confint(re, level=0.95)
-print("95 % EB interval on number sites occupied")
-rbind(s_occup = c(Estimate = sum(EBUP), colSums(CI)) )
-print("95 % EB interval on proportion of sites occupied")
-rbind(PAO = c(Estimate = sum(EBUP), colSums(CI))/s )
+# 
+#s<-nrow(y)
+#re <- ranef(get.models(pdd2, 1)[[1]])
+#EBUP <- bup(re, stat="mode")
+#CI <- confint(re, level=0.95)
+#print("95 % EB interval on number sites occupied")
+#rbind(s_occup = c(Estimate = sum(EBUP), colSums(CI)) )
+#print("95 % EB interval on proportion of sites occupied")
+#rbind(PAO = c(Estimate = sum(EBUP), colSums(CI))/s )
 # If you compare this statistic to the back-tranformed estimate of psi you'll notice it is somewhat lower.  
 # Conceptually this represents the proportion of the finite sample (41 in this case) of sites occupied, 
 # whereas psi estimates the probability of occupancy from an infinite list of sites.
 
+
+#sono riuscita ad eseguire i grafici utilizzando occu(), i grafici somigliano molto a quelli originali (script Pier)
 best.mod <- (get.models(pdd2, 1)[[1]])
 best.mod <- occu(~ MDR + temperatura_occasione
                  ~ MDR +
@@ -258,19 +243,7 @@ Elambda <- predict(best.mod, type='state', newdata=newdat,
                    appendData=TRUE)
 head(Elambda)
 Elambda.logit <- Elambda
-# Elambda.logit$Predicted <- log(Elambda.logit$Predicted/(1-Elambda.logit$Predicted))
-# Elambda.logit$SE <- log(Elambda.logit$SE/(1-Elambda.logit$SE))
-# Elambda.logit$lower <- log(Elambda.logit$lower/(1-Elambda.logit$lower))
-# Elambda.logit$upper <- log(Elambda.logit$upper/(1-Elambda.logit$upper))
-# with(Elambda, log(Predicted)-log(1-Predicted))
 par(mfrow=c(1, 2))
-# with(Elambda, {
-#   plot(Esp.tr, log(Predicted)-log(1-Predicted), xlab="Esposizione", type="l", # names = habitat,
-#                ylab="Occupancy", #ylim=c(-20, 40), # cex.names=0.7,
-#                cex.lab=0.7, cex.axis=0.7, lwd=2, col="red")
-#   lines(Esp.tr, log(Predicted)-log(1-Predicted)+log(SE/1-SE), lty=3, col="grey")
-#   lines(Esp.tr, log(Predicted)-log(1-Predicted)-log(SE/1-SE), lty=2, col="grey")
-# })
 with(subset(Elambda.logit,specie_dominante=="Graminacee"), {
   plot(Esp.tr, Predicted, xlab="Esposizione", type="l", # names = habitat,
        ylab="Probabilità di presenza", #ylim=c(-20, 40), # cex.names=0.7,
@@ -280,15 +253,7 @@ with(subset(Elambda.logit,specie_dominante=="Graminacee"), {
   lines(Esp.tr, upper, lty=2, col="grey")
   lines(Esp.tr, lower, lty=2, col="grey")
 })
-# with(subset(Elambda.logit,dominante=="Graminacee"), {
-#   plot(Esp.tr, Predicted, xlab="Esposizione", type="l", # names = habitat,
-#        ylab="Probabilità di presenza", #ylim=c(-20, 40), # cex.names=0.7,
-#        cex.lab=0.7, cex.axis=0.7, lwd=2, col="red")
-#   lines(Esp.tr, Predicted+SE, lty=3, col="dark grey")
-#   lines(Esp.tr, Predicted-SE, lty=3, col="dark grey")
-#   # lines(Esp.tr, upper, lty=2, col="grey")
-#   # lines(Esp.tr, lower, lty=2, col="grey")
-# })
+
 # Predict abundance at specified covariate values.
 newdat1 <- data.frame(MDR = seq(min(dati.cov.interesse$MDR), max(dati.cov.interesse$MDR), length=100),
                       Esp.tr = mean(dati.cov.interesse$Esp.tr),
@@ -342,7 +307,7 @@ with(Elambda.det, {
   lines(temperatura_occasione, lower, lty=2, col="grey")
 })
 
-#### gli altri grafici fatti nella sessione 2 dello script origninale
+#### gli altri grafici fatti nella sessione 2 dello script origninale, utilizzando di nuovo occu(), non potendo usare il modello pdd2. Nello script originale (di Pier) non riesce a produrre i grafici... ?
 best.mod2 <- occu(~ n_species + temperatura_occasione
                   ~ slope_degr +
                    ott +
@@ -367,20 +332,8 @@ Elambda_ <- predict(best.mod2, type='state', newdata=newdata,
 head(Elambda_)
 Elambda.logit_ <- Elambda_
 
-
-# Elambda.logit$Predicted <- log(Elambda.logit$Predicted/(1-Elambda.logit$Predicted))
-# Elambda.logit$SE <- log(Elambda.logit$SE/(1-Elambda.logit$SE))
-# Elambda.logit$lower <- log(Elambda.logit$lower/(1-Elambda.logit$lower))
-# Elambda.logit$upper <- log(Elambda.logit$upper/(1-Elambda.logit$upper))
-# with(Elambda, log(Predicted)-log(1-Predicted))
 par(mfrow=c(1, 3))
-# with(Elambda, {
-#   plot(Esp.tr, log(Predicted)-log(1-Predicted), xlab="Esposizione", type="l", # names = habitat,
-#                ylab="Occupancy", #ylim=c(-20, 40), # cex.names=0.7,
-#                cex.lab=0.7, cex.axis=0.7, lwd=2, col="red")
-#   lines(Esp.tr, log(Predicted)-log(1-Predicted)+log(SE/1-SE), lty=3, col="grey")
-#   lines(Esp.tr, log(Predicted)-log(1-Predicted)-log(SE/1-SE), lty=2, col="grey")
-# })
+
 with(subset(Elambda.logit_,specie_dominante=="Graminacee"), {
   plot(ott, Predicted, xlab="Copertura vegetazionale", type="l", # names = habitat,
        ylab="Probabilità di presenza", #ylim=c(-20, 40), # cex.names=0.7,
@@ -392,7 +345,7 @@ with(subset(Elambda.logit_,specie_dominante=="Graminacee"), {
 })
 
 
-
+###questo grafico è sbagliato, non riesco a capire dove ho sbagliato 
 newdat1_ <- data.frame(n_species = seq(0, 32, length=100),
                       ott = 0,
                       slope_degr = mean(dati.cov.interesse$slope_degr),
