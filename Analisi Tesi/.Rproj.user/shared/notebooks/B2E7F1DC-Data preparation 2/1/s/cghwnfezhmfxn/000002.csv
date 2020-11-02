@@ -1,4 +1,0 @@
-"0","Daticatt[""Data_R""] <- as.Date(Daticatt$DATA, ""%d/%m/%Y"")"
-"0","Daticatt[""Anno""] <- format(Daticatt[""Data_R""],""%Y"")"
-"0","# Eliminiamo la vecchia colonna Data"
-"0","Daticatt <- subset( Daticatt, select = -DATA)"

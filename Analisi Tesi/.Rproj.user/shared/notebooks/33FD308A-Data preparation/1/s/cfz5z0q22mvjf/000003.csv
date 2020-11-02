@@ -1,4 +1,0 @@
-"0","temp_prec_grand_crot[""Orario_R""] <- strftime(as.POSIXct(temp_prec_grand_crot$orario, format=""%d/%m/%Y %H:%M"", tz = ""Europe/Rome""), format=""%H:%M"")"
-"0","temp_prec_grand_crot[""Data_R""]   <- strftime(as.POSIXct(temp_prec_grand_crot$orario, format=""%d/%m/%Y %H:%M"", tz = ""Europe/Rome""), format=""%d-%m-%Y"")"
-"0","temp_prec_grand_crot <- subset( temp_prec_grand_crot, select = -orario)"
-"0","tail(temp_prec_grand_crot)"

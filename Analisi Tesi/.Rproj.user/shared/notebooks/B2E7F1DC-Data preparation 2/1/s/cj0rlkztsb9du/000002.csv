@@ -1,5 +1,0 @@
-"0","write.csv2(dati.cov,""Dati-elaborati\\Dati-cov.csv"", row.names=FALSE)"
-"2","cannot open file 'Dati-elaborati\Dati-cov.csv': No such file or directory"
-"2","Error in file(file, ifelse(append, ""a"", ""w"")) : 
-  cannot open the connection
-"

@@ -1,5 +1,0 @@
-"0","temperatura_grand_crot = do.call(rbind, lapply(files_termometro, function(x) read.csv(x, dec="","", sep="";"", header = TRUE )))
-"
-"2","Error in lapply(files_termometro, function(x) read.csv(x, dec = "","", sep = "";"",  : 
-  object 'files_termometro' not found
-"

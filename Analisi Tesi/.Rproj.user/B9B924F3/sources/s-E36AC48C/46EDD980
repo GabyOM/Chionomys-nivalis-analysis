@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1604313539617.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2375481394",
+    "id" : "46EDD980",
+    "lastKnownWriteTime" : 1604339793,
+    "last_content_update" : 1604339793572,
+    "path" : "~/GitHub/Chionomys-nivalis-analysis/Analisi Tesi/4. Analisi Occupancy.Rmd",
+    "project_path" : "4. Analisi Occupancy.Rmd",
+    "properties" : {
+        "cursorPosition" : "345,0",
+        "scrollLine" : "320"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

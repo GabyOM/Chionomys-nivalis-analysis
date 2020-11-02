@@ -1,6 +1,0 @@
-"0","# CSV Raccolta dati"
-"0","Daticatt <- read.csv(""Dati-originali/daticatture.csv"", dec="","", sep="";"", header = TRUE)"
-"0","Datitrap <- read.csv(""Dati-originali/datitrappole.csv"", dec="","", sep="";"", header = TRUE)"
-"0","Datioccas <- read.csv(""Dati-originali/sforzocampionamento.csv"", dec="","", sep="";"", header = TRUE)"
-"0","# CSV Meteo"
-"0","temp_prec_grand_crot <- read.csv(""Dati-elaborati\\Dati_precip-temp_grand-crot.csv"", dec="","", sep="";"", header = TRUE)"
