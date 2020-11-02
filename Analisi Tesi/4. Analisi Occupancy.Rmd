@@ -295,7 +295,7 @@ newdat1 <- data.frame(MDR = seq(min(dati.cov.interesse$MDR), max(dati.cov.intere
                       specie_dominante = "Graminacee")
 newdat2 <- data.frame(MDR = seq(min(dati.cov.interesse$MDR), max(dati.cov.interesse$MDR), length=100),
                       Esp.tr = mean(dati.cov.interesse$Esp.tr),
-                      dominante = "Muschio")
+                      specie_dominante = "Muschio")
 newdat3 <- data.frame(MDR = seq(min(dati.cov.interesse$MDR), max(dati.cov.interesse$MDR), length=100),
                       Esp.tr = mean(dati.cov.interesse$Esp.tr),
                       specie_dominante = "Other_sp")
@@ -316,7 +316,7 @@ with(subset(Elambda.logit,specie_dominante=="Graminacee"), {
 
 
 newdat1 <- data.frame(MDR = seq(min(dati.cov.interesse$MDR), max(dati.cov.interesse$MDR), length=100),
-                      temp = 13.14)
+                      temperatura_occasione = mean(temperatura_occasione, na.rm=TRUE))
 Elambda.det <- predict(best.mod, type='det', newdata=newdat1,
                    appendData=TRUE)
 with(Elambda.det, {
@@ -329,17 +329,17 @@ with(Elambda.det, {
   lines(MDR, lower, lty=2, col="grey")
 })
 newdat1 <- data.frame(MDR = mean(dati.cov.interesse$MDR),
-                      temp = seq(7.99, 17.95, length=100))
+                      temperatura_occasione = seq(min(temperatura_occasione, na.rm=TRUE)), (max(temperatura_occasione, na.rm=TRUE)), length=100)
 Elambda.det <- predict(best.mod, type='det', newdata=newdat1,
                        appendData=TRUE)
 with(Elambda.det, {
-  plot(temp, Predicted, xlab="temperatura", type="l", # names = habitat,
+  plot(temperatura_occasione, Predicted, xlab="Temperatura", type="l", # names = habitat,
        ylab="Probabilità di cattura", #ylim=c(-20, 40), # cex.names=0.7,
        cex.lab=0.7, cex.axis=0.7, lwd=2, col="red")
-  # lines(temp, Predicted+SE, lty=3, col="dark grey")
-  # lines(temp, Predicted-SE, lty=3, col="dark grey")
-  lines(temp, upper, lty=2, col="grey")
-  lines(temp, lower, lty=2, col="grey")
+  # lines(temperatura_occasione, Predicted+SE, lty=3, col="dark grey")
+  # lines(temperatura_occasione, Predicted-SE, lty=3, col="dark grey")
+  lines(temperatura_occasione, upper, lty=2, col="grey")
+  lines(temperatura_occasione, lower, lty=2, col="grey")
 })
 
 

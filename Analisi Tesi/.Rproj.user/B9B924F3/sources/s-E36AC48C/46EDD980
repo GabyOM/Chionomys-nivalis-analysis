@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2375481394",
+    "hash" : "0",
     "id" : "46EDD980",
-    "lastKnownWriteTime" : 1604339793,
-    "last_content_update" : 1604339793572,
+    "lastKnownWriteTime" : 1604342682,
+    "last_content_update" : 1604342682830,
     "path" : "~/GitHub/Chionomys-nivalis-analysis/Analisi Tesi/4. Analisi Occupancy.Rmd",
     "project_path" : "4. Analisi Occupancy.Rmd",
     "properties" : {
-        "cursorPosition" : "345,0",
-        "scrollLine" : "320"
+        "cursorPosition" : "201,43",
+        "scrollLine" : "187"
     },
     "relative_order" : 1,
     "source_on_save" : false,
