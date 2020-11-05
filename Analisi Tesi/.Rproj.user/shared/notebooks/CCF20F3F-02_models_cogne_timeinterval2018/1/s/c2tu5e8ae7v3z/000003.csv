@@ -1,8 +1,0 @@
-"0","```r
-# # solo modelli con numero di specie
-# fmList_n_species <- fitList(m0, m1, m2, m3, m4, m5, m6)
-# modSel(fmList_n_species)
-# # solo modelli con vegetazione in ottavi
-# fmList_ottavi_veg <- fitList(m0, m1b, m2b, m3b, m4b, m5b, m6b)
-# modSel(fmList_ottavi_veg)
-```"
